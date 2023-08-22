@@ -41,7 +41,29 @@ class SerialConnector:
             if self.debug:
                 print("Unable to disconnect. Never connected.")
     
-    
+
+        # Looks for message in format "||FS||UUID||"
+    # Returns UUID or None if not found
+    def identify(self):
+        if self.debug:
+            print("Identifying device...")
+        timeout = 0
+        messages = self.read_serial_messages()
+        while not messages:
+            sleep(1)
+            messages = self.read_serial_messages()
+            timeout += 1
+            if timeout > 3:
+                if self.debug:
+                    print('')
+                return None
+        for message in messages:
+            if message.startswith("||"):
+                parts = message[2:-2].split('||')
+                if(parts[0] == "FS"):
+                    return parts[1]
+        return None
+
     # Reads all serial messages in the queue
     # Returns a list of all messages
     def read_serial_messages(self):
