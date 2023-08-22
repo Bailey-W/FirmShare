@@ -12,7 +12,7 @@ class SerialConnector:
     # returns true if the connection is successful, or false if it is not
     def connect(self):
         if self.debug:
-            print('Connecting to', self.port, 'at', self.baud, 'bps...')
+            print(f'Connecting to {self.port} at {self.baud} bps...')
         
         # Tries to connect to the serial port
         try:
@@ -40,7 +40,18 @@ class SerialConnector:
         else:
             if self.debug:
                 print("Unable to disconnect. Never connected.")
-
+    
+    
+    # Reads all serial messages in the queue
+    # Returns a list of all messages
+    def read_serial_messages(self):
+        if self.ser.in_waiting == 0:
+            return None
+        lines = []
+        while self.ser.in_waiting > 0:
+            lines.append(self.ser.readline().decode('utf-8').strip())
+        print(lines)
+        return lines
 
     # Updates the port value of the object
     # expects: port, a COM port of the computer
@@ -59,5 +70,11 @@ class SerialConnector:
 if __name__ == "__main__":
     conn = SerialConnector('/dev/ttyUSB0', 115200, True)
     print(conn.connect())
+    print(conn.identify())
+    for x in range(500):
+        lines = conn.read_serial_messages()
+        if lines:
+            print(lines)
+        sleep(0.01)
     conn.disconnect()
     
