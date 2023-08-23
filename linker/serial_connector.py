@@ -42,7 +42,7 @@ class SerialConnector:
                 print("Unable to disconnect. Never connected.")
     
 
-        # Looks for message in format "||FS||UUID||"
+    # Looks for message in format "||FS||UUID||"
     # Returns UUID or None if not found
     def identify(self):
         if self.debug:
@@ -65,14 +65,18 @@ class SerialConnector:
         return None
 
     # Reads all serial messages in the queue
-    # Returns a list of all messages
+    # Returns a list of all messages or None if there are no messages
     def read_serial_messages(self):
+        # if there haven't been any messages, returns None
         if self.ser.in_waiting == 0:
             return None
+        
         lines = []
         while self.ser.in_waiting > 0:
             lines.append(self.ser.readline().decode('utf-8').strip())
-        print(lines)
+
+        if self.debug:
+            print(lines)
         return lines
 
     # Updates the port value of the object
@@ -90,13 +94,14 @@ class SerialConnector:
         self.baud = baud
 
 if __name__ == "__main__":
-    conn = SerialConnector('/dev/ttyUSB0', 115200, True)
-    print(conn.connect())
+    conn = SerialConnector('/dev/ttyUSB0', 115200, False)
+    conn.connect()
     print(conn.identify())
     for x in range(500):
         lines = conn.read_serial_messages()
         if lines:
-            print(lines)
+            for line in lines:
+                print(line)
         sleep(0.01)
     conn.disconnect()
     
