@@ -97,6 +97,15 @@ class SerialConnector:
 
     def get_UUID(self):
         return self.UUID
+    
+    def get_port(self):
+        return self.port
+    
+    def get_baud(self):
+        return self.baud
+    
+    def get_connection_status(self):
+        return self.connected
 
 if __name__ == "__main__":
     conn = SerialConnector('/dev/ttyUSB0', 115200, False)
