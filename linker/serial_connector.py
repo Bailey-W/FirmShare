@@ -31,15 +31,18 @@ class SerialConnector:
         return self.connected
     
     # Disconnects from the serial port, only if previously connected
+    # Returns true if disconnected successfully, false otherwise
     def disconnect(self):
         if self.connected:
             if self.debug:
                 print("Disconnecting...")
             self.ser.close()
             self.connected = False
+            return True
         else:
             if self.debug:
                 print("Unable to disconnect. Never connected.")
+            return False
     
 
     # Looks for message in format "||FS||UUID||"
