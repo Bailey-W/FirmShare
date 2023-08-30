@@ -56,11 +56,13 @@ class SerialConnector:
             if timeout > 3:
                 if self.debug:
                     print('')
+                self.UUID = None
                 return None
         for message in messages:
             if message.startswith("||"):
                 parts = message[2:-2].split('||')
                 if(parts[0] == "FS"):
+                    self.UUID = parts[1]
                     return parts[1]
         return None
 
@@ -92,6 +94,9 @@ class SerialConnector:
         if self.connected:
             self.disconnect()
         self.baud = baud
+
+    def get_UUID(self):
+        return self.UUID
 
 if __name__ == "__main__":
     conn = SerialConnector('/dev/ttyUSB0', 115200, False)
