@@ -73,7 +73,7 @@ class SerialConnector:
     # Returns a list of all messages or None if there are no messages
     def read_serial_messages(self):
         # if there haven't been any messages, returns None
-        if self.ser.in_waiting == 0:
+        if self.ser.in_waiting == 0 or self.connected == False:
             return None
         
         lines = []
